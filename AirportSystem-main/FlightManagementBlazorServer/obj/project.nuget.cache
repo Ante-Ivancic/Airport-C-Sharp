@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "HCb2R/+ti3srIt36e2CHNPHqefKCtnIP4Di0ZTtUCvb9Reh2kmmFKh/u/eQnAfdCOyYMxa3MPEvKRMT7jfYjKw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Lijana\\Desktop\\AirportSystem-main\\FlightManagementBlazorServer\\FlightManagementBlazorServer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lijana\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.13\\microsoft.netcore.app.host.win-x64.5.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}

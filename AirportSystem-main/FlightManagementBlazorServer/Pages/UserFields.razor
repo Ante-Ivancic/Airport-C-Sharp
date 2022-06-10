@@ -1,0 +1,25 @@
+﻿<div class="userFields">
+    <label for="userName">Name</label>
+    <InputText id="userName" @bind-Value="@User.Name" class="form-control"></InputText>
+
+    <label for="userSurname">Surname</label>
+    <InputText id="userSurname" @bind-Value="@User.Surname" class="form-control"></InputText>
+
+    <label for="userUsername">Username</label>
+    <InputText id="userUsername" @bind-Value="@User.Username" class="form-control"></InputText>
+
+    <label for="userPassword">Password</label>
+    <InputText id="userPassword" @bind-Value="@User.Password" class="form-control"></InputText>
+
+    <label for="userRole">Role</label>
+    <InputSelect id="userRole" @bind-Value="User.Role" class="form-control">
+        <option value="">Select...</option>
+        <option value="Admin">Admin</option>
+        <option value="CheckIn">CheckIn</option>
+    </InputSelect>
+</div>
+
+@code {
+    [Parameter]
+    public User User { get; set; }
+}

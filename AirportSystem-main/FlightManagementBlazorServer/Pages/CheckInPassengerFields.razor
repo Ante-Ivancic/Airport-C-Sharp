@@ -1,0 +1,12 @@
+﻿<div class="checkInPassengerFields">
+
+<label for="passengerSeat">Seat</label>
+<InputText id="passengerSeat" @bind-Value="@Passenger.Seat" class="form-control"></InputText>
+</div>
+@{
+    Passenger.AlreadyCheckedIn = true;
+}
+@code {
+    [Parameter]
+    public Passenger Passenger { get; set; }
+}

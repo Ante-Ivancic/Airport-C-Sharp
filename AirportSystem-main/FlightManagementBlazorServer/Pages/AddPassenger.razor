@@ -1,0 +1,39 @@
+﻿@page "/AddPassenger"
+@layout AdminLayout
+@inject PassengerService _passengerService;
+@inject NavigationManager _navigationManager;
+<h3>Add Passenger</h3>
+@if (Passenger == null)
+{
+    <p>Loading..</p>
+}
+else
+{
+    <EditForm Model="@Passenger" OnValidSubmit="@AddPassengerAsync">
+        <PassengerFields Passenger="@Passenger"></PassengerFields>
+        <button type="submit" class="btn btn-primary">
+            <span class="oi oi-pencil"></span>
+            Add Passenger
+        </button>
+        <button type="button" @onclick="Close">
+            <span class="oi oi-media-skip-backward"></span>
+            Close
+        </button>
+    </EditForm>
+}
+@code {
+    public Passenger Passenger { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Passenger = new Passenger();
+    }
+    private async Task AddPassengerAsync()
+    {
+        await _passengerService.AddPassengerAsync(Passenger);
+        Close();
+    }
+    private void Close()
+    {
+        _navigationManager.NavigateTo("/PassengerList");
+    }
+}

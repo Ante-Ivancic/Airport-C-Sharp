@@ -1,0 +1,74 @@
+﻿@page "/PassengerList/{FlightId}"
+@layout CheckInLayout
+@using FlightManagementBlazorServer.Services
+@inject NavigationManager _navigationManager;
+@inject PassengerService _passengerService;
+<h3>Passenger List</h3>
+@if (Passengers == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-responsive">
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Surname</th>
+    <th>Gender</th>
+    <th>FlightId</th>
+    <th>Checked in</th>
+    <th>Seat</th>
+
+    </tr>
+    </thead>
+    <tbody>
+            @foreach (var passenger in FlightPassengers)
+            {
+        <tr>
+        <td>@passenger.Name</td>
+        <td>@passenger.Surname</td>
+        <td>@passenger.Gender</td>
+        <td>@passenger.FlightId</td>
+        <td>@passenger.AlreadyCheckedIn</td>
+        <td>@passenger.Seat</td>
+
+        <td>
+        @if(passenger.AlreadyCheckedIn==false)
+        {
+            <button type="button" @onclick="() => OpenCheckInPassengerPage(passenger.Id)">
+            Check in
+            </button>
+        }
+        </td>
+        </tr>
+            }
+    </tbody>
+    </table>
+}
+@code {
+    [Parameter]
+    public string FlightId{ get; set; }
+    public List<Passenger> Passengers { get; set; }
+    List<Passenger> FlightPassengers = new List<Passenger>();
+    protected override async Task OnInitializedAsync()
+    {
+        Passengers = await GetPassengersAsync();
+        foreach(Passenger passenger in Passengers)
+        {
+            if(FlightId==passenger.FlightId.ToString())
+            {
+                FlightPassengers.Add(passenger);
+            }
+        }
+        
+    }
+    private void OpenCheckInPassengerPage(int passengerId)
+    {
+        _navigationManager.NavigateTo($"/CheckInCheckIn/{passengerId}");
+    }
+    private async Task<List<Passenger>> GetPassengersAsync()
+    {
+        return await _passengerService.GetPassengersAsync();
+    }
+}

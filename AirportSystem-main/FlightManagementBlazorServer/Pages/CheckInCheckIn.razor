@@ -1,0 +1,41 @@
+﻿@page "/CheckInCheckIn/{PassengerId}"
+@layout CheckInLayout
+@inject PassengerService _passengerService;
+@inject NavigationManager _navigationManager;
+<h3>Check in Passenger</h3>
+@if (Passenger == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@Passenger" OnValidSubmit="@UpdatePassengerAsync">
+        <CheckInPassengerFields Passenger="@Passenger"></CheckInPassengerFields>
+        <button type="submit" class="btn btn-primary">
+            <span class="oi oi-pencil"></span>
+            Check in Passenger
+        </button>
+        <button type="button" @onclick="Close">
+            <span class="oi oi-media-skip-backward"></span>
+            Close
+        </button>
+    </EditForm>
+}
+@code {
+    [Parameter]
+    public string PassengerId { get; set; }
+    public Passenger Passenger { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Passenger = await _passengerService.GetPassengerAsync(int.Parse(PassengerId));
+    }
+    private async Task UpdatePassengerAsync()
+    {
+        await _passengerService.UpdatePassengerAsync(Passenger);
+        Close();
+    }
+    private void Close()
+    {
+        _navigationManager.NavigateTo("/CheckInFlightList");
+    }
+}

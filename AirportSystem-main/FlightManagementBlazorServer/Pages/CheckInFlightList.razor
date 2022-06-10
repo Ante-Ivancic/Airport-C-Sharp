@@ -1,0 +1,61 @@
+﻿@page "/CheckInFlightList"
+@layout CheckInLayout
+@using FlightManagementBlazorServer.Services
+@inject FlightService _flightService;
+@inject NavigationManager _navigationManager;
+
+
+<h3>Flights</h3>
+@if(Flights == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Carrier</th>
+                <th>Airport to</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var flight in Flights)
+            {
+                <tr>
+                    <td>@flight.Number</td>
+                    <td>@flight.FlightDate.ToString("dd.MM.yyyy")</td>
+                    <td>@flight.FlightTime</td>
+                    <td>@flight.Carrier?.Name</td>
+                    <td>@flight.AirportTo</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => FlightPassengers(flight.Id)">
+                            Passengers
+                        </button>
+                    </td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+
+}
+@code {
+    private List<Flight> Flights;
+    public ConfirmationDialog DeleteConfirmationDialog{ get; set; }
+    public ConfirmationDialog ArchiveConfirmationDialog{ get; set; }
+    public int SelectedFlightId{ get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Flights = await _flightService.GetFlights();
+    }
+
+    private async Task FlightPassengers(int flightId)
+    {
+        SelectedFlightId = flightId;
+        _navigationManager.NavigateTo($"/PassengerList/{flightId}");
+    }
+}

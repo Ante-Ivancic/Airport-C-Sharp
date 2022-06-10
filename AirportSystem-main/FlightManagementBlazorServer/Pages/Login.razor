@@ -1,0 +1,80 @@
+﻿@page "/"
+@layout LoginLayout
+@inject UserService _userService;
+@inject NavigationManager _navigationManager;
+@inject IJSRuntime JsRuntime
+<h3>Login</h3>
+@if (User == null)
+{
+    <p>Loading..</p>
+}
+else
+{
+    <EditForm Model="@User" OnValidSubmit="@LoginConfirm">
+        <UserLoginFields User="@User"></UserLoginFields>
+        <button type="submit" class="btn btn-primary">
+            Login
+        </button>
+    </EditForm>
+    <button type="submit" class="btn btn-primary" @onclick="Help">
+        Help
+    </button>
+}
+@code {
+    public User User { get; set; }
+    public string link = "";
+    List<User> Users = new List<User>();
+    protected override async Task OnInitializedAsync()
+    {
+        User = new User();
+        Users = await _userService.GetUsersAsync();
+        if (Users.Count < 2)
+        {
+            User admin = new User();
+            User checkin = new User();
+
+            admin.Name = "admin";
+            admin.Surname = "admin";
+            admin.Username = "admin";
+            admin.Password = "admin";
+            admin.Role = "Admin";
+
+            checkin.Name = "checkin";
+            checkin.Surname = "checkin";
+            checkin.Username = "checkin";
+            checkin.Password = "checkin";
+            checkin.Role = "Checkin";
+
+            await _userService.AddUserAsync(admin);
+            await _userService.AddUserAsync(checkin);
+
+        }
+        Users = await _userService.GetUsersAsync();
+
+    }
+    private async Task LoginConfirm()
+    {
+        foreach (User user in Users)
+        {
+            if (user.Username == User.Username && user.Password == User.Password)
+            {
+                User.Role = user.Role;
+                break;
+            }
+        }
+        if (User.Role != null)
+        {
+            link = "/" + User.Role + "MainMenu";
+            _navigationManager.NavigateTo(link);
+        }
+        else
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Greška prilikom logina. Provjerite username i password.");
+        }
+    }
+    private async Task Help()
+    {
+        await JsRuntime.InvokeVoidAsync("alert", "Pokušajte admin, admin ili checkin, checkin.");
+
+    }
+}

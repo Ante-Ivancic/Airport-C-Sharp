@@ -1,0 +1,39 @@
+﻿@page "/AddUser"
+@layout AdminLayout
+@inject UserService _userService;
+@inject NavigationManager _navigationManager;
+<h3>Add User</h3>
+@if (User == null)
+{
+    <p>Loading..</p>
+}
+else
+{
+    <EditForm Model="@User" OnValidSubmit="@AddUserAsync">
+        <UserFields User="@User"></UserFields>
+        <button type="submit" class="btn btn-primary">
+            <span class="oi oi-pencil"></span>
+            Add User
+        </button>
+        <button type="button" @onclick="Close">
+            <span class="oi oi-media-skip-backward"></span>
+            Close
+        </button>
+    </EditForm>
+}
+@code {
+    public User User { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        User = new User();
+    }
+    private async Task AddUserAsync()
+    {
+        await _userService.AddUserAsync(User);
+        Close();
+    }
+    private void Close()
+    {
+        _navigationManager.NavigateTo("/UserList");
+    }
+}
